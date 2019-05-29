@@ -2,6 +2,7 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 import models.Measurement
+import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, AnyContent, ControllerComponents, Request}
 import services.StorageService
 
@@ -18,10 +19,8 @@ class MeasurementController @Inject()(cc: ControllerComponents,
   }
 
 
-
   private def tryToStoreTheMeasurement(uuid: String, measurement: Measurement) = {
-    if (storageService.saveMeasurement(uuid, measurement))
-      Ok("Information Stored Successfully!")
+    if (storageService.saveMeasurement(uuid, measurement)) Ok(Json.toJson(measurement))
     else InternalServerError("Some thing went wrong, we could not store the measurement!")
   }
 }

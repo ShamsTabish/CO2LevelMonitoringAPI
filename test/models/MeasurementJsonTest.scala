@@ -21,5 +21,4 @@ class MeasurementJsonTest extends PlaySpec {
       maybeMeasurement mustEqual (Some(sampleMeasurement))
     }
   }
-
 }
