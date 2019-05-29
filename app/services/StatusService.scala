@@ -12,18 +12,22 @@ case class StatusWithHistory(past3Values: List[Int], status: Status)
 @Singleton
 class StatusService @Inject()(dataBase: MeasurementDatabase) {
   val ALERT_LEVEL = 2000
-  private val measurementMap: mutable.Map[String, StatusWithHistory] = mutable.Map.empty[String, StatusWithHistory]
+  private val statusMap: mutable.Map[String, StatusWithHistory] = mutable.Map.empty[String, StatusWithHistory]
 
-  def updateStatus(uuid: String, measurement: Measurement) = {
+  def getStatus(uuid: String): Status = {
+    statusMap.getOrElse(uuid, StatusWithHistory(List.empty, OK())).status
+  }
+
+  def updateStatus(uuid: String, measurement: Measurement): Status = {
     synchronized {
-      val pastStatus = measurementMap.getOrElse(uuid, StatusWithHistory(List.empty, OK()))
+      val pastStatus = statusMap.getOrElse(uuid, StatusWithHistory(List.empty, OK()))
       val cO2LevelsHistory = pastStatus.past3Values :+ measurement.co2Level
       val recent3Co2Levels = cO2LevelsHistory.takeRight(3)
 
       val statusNow: Status = calculateCurrentStatus(measurement, pastStatus, recent3Co2Levels)
       if (statusNow == ALERT())
         dataBase.logAlert(uuid, measurement)
-      measurementMap.put(uuid, StatusWithHistory(recent3Co2Levels, statusNow))
+      statusMap.put(uuid, StatusWithHistory(recent3Co2Levels, statusNow))
       statusNow
     }
   }
