@@ -37,8 +37,6 @@ class MeasurementMatrixServiceTest extends PlaySpec with MockitoSugar {
     val oneDayAgo = endTime.minusDays(1)
     val threeDaysAgo = endTime.minusDays(3)
     val twentyNineDaysAgo = endTime.minusDays(29)
-
-
   }
 
 }
