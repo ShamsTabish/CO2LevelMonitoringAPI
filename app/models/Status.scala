@@ -7,7 +7,7 @@ sealed trait Status {
       case WARN() => "WARN"
       case OK() => "OK"
     }
-    stringRepresentation
+
     s"""
        |{
        | "status" : "$stringRepresentation"
