@@ -15,8 +15,8 @@ Goto browser and enter [URL http://localhost:9000](http://localhost:9000)
 ## Available Routes
 ```
 GET      /
-GET      /api/v1/sensors/$uuid<[0-9,A-Z,-]+>/metrics
-POST     /api/v1/sensors/$uuid<[0-9,A-Z,-]+>/mesurements
-GET      /api/v1/sensors/$uuid<[0-9,A-Z,-]+>
-GET      /api/v1/sensors/$uuid<[0-9,A-Z,-]+>/alerts
+GET      /api/v1/sensors/{uuid}/metrics
+POST     /api/v1/sensors/{uuid}/mesurements
+GET      /api/v1/sensors/{uuid}
+GET      /api/v1/sensors/{uuid}/alerts
 ```
