@@ -13,7 +13,7 @@ class MeasurementController @Inject()(cc: ControllerComponents,
   def collect(uuid: String) = Action { implicit request: Request[AnyContent] =>
     val mayBeMeasurement = request.body.asJson.flatMap(_.as[Option[Measurement]])
     mayBeMeasurement match {
-      case None => BadRequest(s"Invalid Data: $mayBeMeasurement")
+      case None => BadRequest(s"Invalid Data: ${request.body.asJson}")
       case Some(measurement) => tryToStoreTheMeasurement(uuid, measurement)
     }
   }
