@@ -21,7 +21,7 @@ GET      /api/v1/sensors/{uuid}
 GET      /api/v1/sensors/{uuid}/alerts
 ```
 
-## To run Tests run
+## To run tests, run
 ``` sbt test ```
 
 ### Planned Enhancements
