@@ -1,14 +1,10 @@
 package controllers
 
-import java.time.LocalDateTime
-
 import javax.inject._
 import models.Measurement
 import play.api.libs.json.Json
 import play.api.mvc._
 import services.StatusService
-
-import scala.collection.immutable
 
 
 @Singleton
