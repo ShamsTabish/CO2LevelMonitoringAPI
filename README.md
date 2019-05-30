@@ -26,4 +26,4 @@ GET      /api/v1/sensors/{uuid}/alerts
 
 ### Planned Enhancements
   * At present the `InMemoryStorage` class is a place holder for database, I am planning to replace it with Some database e.g `MySql` or some in memory database like `H2` or  `Apache Jena`
-  * For Handling heavy requests I have planned to use Akka actors.
+  * For Handling heavy requests I have planned to use Akka actors (the present solution is with synchronous blocks which could slow down the process, akka is a good solution to the synchronization problem).
