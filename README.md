@@ -21,6 +21,8 @@ GET      /api/v1/sensors/{uuid}
 GET      /api/v1/sensors/{uuid}/alerts
 ```
 
+##To run Tests run
+``` sbt test ```
 
 ### Planned Enhancements
   * At present the `InMemoryStorage` class is a place holder for database, I am planning to replace it with Some database e.g `MySql` or some in memory database like `H2` or  `Apache Jena`
