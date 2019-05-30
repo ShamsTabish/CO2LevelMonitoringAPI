@@ -18,6 +18,10 @@ class StatusService @Inject()(dataBase: MeasurementDatabase) {
     statusMap.getOrElse(uuid, StatusWithHistory(List.empty, OK())).status
   }
 
+  def getAllAlerts(uuid: String): List[Measurement] = {
+    dataBase.getAllAlerts(uuid)
+  }
+
   def updateStatus(uuid: String, measurement: Measurement): Status = {
     synchronized {
       val pastStatus = statusMap.getOrElse(uuid, StatusWithHistory(List.empty, OK()))

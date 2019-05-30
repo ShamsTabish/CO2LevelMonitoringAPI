@@ -16,9 +16,15 @@ class MeasurementJsonTest extends PlaySpec {
       val maybeMeasurement = Json.parse(jsonMeasurement).as[Option[Measurement]]
       maybeMeasurement mustEqual (Some(sampleMeasurement))
     }
-    "should be convertible from Json" in {
-      val maybeMeasurement = Json.parse(jsonMeasurement).as[Option[Measurement]]
-      maybeMeasurement mustEqual (Some(sampleMeasurement))
+    "should return None if input is missing some field" in {
+      val invalidJsonMeasurement = """{"other":"23","time":"2019-02-14T10:10"}"""
+      val maybeMeasurement = Json.parse(invalidJsonMeasurement).as[Option[Measurement]]
+      maybeMeasurement mustEqual (None)
+    }
+    "should return None if invalid date passed" in {
+      val invalidJsonMeasurement = """{"co2":"23","time":"201-22A10-10"}"""
+      val maybeMeasurement = Json.parse(invalidJsonMeasurement).as[Option[Measurement]]
+      maybeMeasurement mustEqual (None)
     }
   }
 }

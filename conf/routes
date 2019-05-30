@@ -8,6 +8,7 @@ GET      /                                                        controllers.Ho
 GET      /api/v1/sensors/$uuid<[0-9,A-Z,-]+>/metrics              controllers.MeasurementMatrixController.getMatrix(uuid:String)
 POST     /api/v1/sensors/$uuid<[0-9,A-Z,-]+>/mesurements          controllers.MeasurementController.collect(uuid:String)
 GET      /api/v1/sensors/$uuid<[0-9,A-Z,-]+>                      controllers.StatusController.getStatus(uuid:String)
+GET      /api/v1/sensors/$uuid<[0-9,A-Z,-]+>/alerts               controllers.StatusController.getAllAlerts(uuid:String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
