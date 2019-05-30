@@ -20,3 +20,8 @@ POST     /api/v1/sensors/{uuid}/mesurements
 GET      /api/v1/sensors/{uuid}
 GET      /api/v1/sensors/{uuid}/alerts
 ```
+
+
+### Planned Enhancements
+  * At present the `InMemoryStorage` class is a place holder for database, I am planning to replace it with Some database e.g `MySql` or some in memory database like `H2` or  `Apache Jena`
+  * For Handling heavy requests I have planned to use Akka actors.
