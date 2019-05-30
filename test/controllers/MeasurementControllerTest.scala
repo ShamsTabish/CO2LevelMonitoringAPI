@@ -15,9 +15,7 @@ class MeasurementControllerTest extends PlaySpec with GuiceOneAppPerTest with In
 
   "MeasurementController POST measurement" should {
 
-    "return measurement Json with status code as Ok when measurement stored." in {
-      val uuid = "1234"
-      val mockStorageService = mock[StorageService]
+    "return measurement Json with status code as Ok when measurement stored." in new Fixture  {
       val jsonRequestBody = Json.parse( """{"co2":"2300","time":"2019-05-14T10:10"}""")
       when(mockStorageService.saveMeasurement(uuid, jsonRequestBody.as[Option[Measurement]].get)).thenReturn(true)
       val controller = new MeasurementController(stubControllerComponents(), mockStorageService)
@@ -26,9 +24,7 @@ class MeasurementControllerTest extends PlaySpec with GuiceOneAppPerTest with In
       status(measurementResult) mustBe OK
       Helpers.contentAsString(measurementResult) mustBe (jsonRequestBody.toString())
     }
-    "return BadRequest status code when in appropriate data sent for storage" in {
-      val uuid = "1234"
-      val mockStorageService = mock[StorageService]
+    "return BadRequest status code when in appropriate data sent for storage" in new Fixture {
       val jsonRequestBody = Json.parse( """{"N":"2300","time":"2019-05-14T10:10"}""")
       val controller = new MeasurementController(stubControllerComponents(), mockStorageService)
       val fakeRequest = FakeRequest(POST, s"/api/v1/sensors/$uuid/mesurements").withJsonBody(jsonRequestBody)
@@ -36,9 +32,7 @@ class MeasurementControllerTest extends PlaySpec with GuiceOneAppPerTest with In
       status(measurementResult) mustBe BAD_REQUEST
       Helpers.contentAsString(measurementResult) mustBe ("""Invalid Data: Some({"N":"2300","time":"2019-05-14T10:10"})""")
     }
-    "return status code 500 data storage fails" in {
-      val uuid = "1234"
-      val mockStorageService = mock[StorageService]
+    "return status code 500 data storage fails" in new Fixture {
       val jsonRequestBody = Json.parse( """{"co2":"2300","time":"2019-05-14T10:10"}""")
       when(mockStorageService.saveMeasurement(uuid, jsonRequestBody.as[Option[Measurement]].get)).thenReturn(false)
       val controller = new MeasurementController(stubControllerComponents(), mockStorageService)
@@ -47,5 +41,10 @@ class MeasurementControllerTest extends PlaySpec with GuiceOneAppPerTest with In
       status(measurementResult) mustBe INTERNAL_SERVER_ERROR
       Helpers.contentAsString(measurementResult) mustBe ("Some thing went wrong, we could not store the measurement!")
     }
+  }
+  private sealed trait Fixture{
+      val uuid = "1234"
+      val mockStorageService = mock[StorageService]
+
   }
 }
