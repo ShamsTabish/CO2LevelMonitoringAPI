@@ -6,6 +6,9 @@ You need to have following installed on your machine
 
 ## How to Run
 Navigate to root folder on terminal
+
+run build.sh file to setup the docker image
+
 run following command to start the application on port number 9000
 ```sbt run 9000```
 
