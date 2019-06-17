@@ -3,7 +3,7 @@ package contracts
 import java.time.LocalDateTime
 
 import com.google.inject.ImplementedBy
-import mockDataAccessLayes.InMemoryStorage
+import dataAccessLayes.InMemoryStorage
 import models.Measurement
 
 @ImplementedBy(classOf[InMemoryStorage])

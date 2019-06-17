@@ -1,4 +1,4 @@
-package mockDataAccessLayes
+package dataAccessLayes
 
 import java.time.LocalDateTime
 
@@ -23,7 +23,6 @@ class InMemoryStorage extends MeasurementDatabase {
         true
       }.getOrElse(false)
     }
-
   }
 
   override def getMeasurements(uuid: String, start: LocalDateTime, endTime: LocalDateTime): List[Measurement] =
