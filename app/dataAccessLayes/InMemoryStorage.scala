@@ -1,11 +1,10 @@
 package dataAccessLayes
 
 import java.time.LocalDateTime
-import java.util.concurrent.ConcurrentMap
 
 import contracts.MeasurementDatabase
 import javax.inject.Singleton
-import models.{Measurement, OK}
+import models.{Measurement, OK, Status}
 import services.StatusWithHistory
 
 import scala.collection.mutable
@@ -19,7 +18,6 @@ class InMemoryStorage extends MeasurementDatabase {
   private val statusMap: mutable.Map[String, StatusWithHistory] = mutable.Map.empty[String, StatusWithHistory]
 
   override def storeMeasurement(uuid: String, measurement: Measurement): Future[Boolean] = {
-    val s:ConcurrentMap
     val status = synchronized {
       Try {
         val measurements = measurementMap.getOrElse(uuid, List.empty[Measurement])

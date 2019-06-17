@@ -10,6 +10,9 @@ import play.api.test.Helpers.{POST, status, stubControllerComponents, _}
 import play.api.test.{FakeRequest, Helpers, Injecting}
 import services.StorageService
 
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+
 
 class MeasurementControllerTest extends PlaySpec with GuiceOneAppPerTest with Injecting with MockitoSugar {
 
@@ -17,7 +20,7 @@ class MeasurementControllerTest extends PlaySpec with GuiceOneAppPerTest with In
 
     "return measurement Json with status code as Ok when measurement stored." in new Fixture  {
       val jsonRequestBody = Json.parse( """{"co2":"2300","time":"2019-05-14T10:10"}""")
-      when(mockStorageService.saveMeasurement(uuid, jsonRequestBody.as[Option[Measurement]].get)).thenReturn(true)
+      when(mockStorageService.saveMeasurement(uuid, jsonRequestBody.as[Option[Measurement]].get)).thenReturn(Future.successful(true))
       val controller = new MeasurementController(stubControllerComponents(), mockStorageService)
       val fakeRequest = FakeRequest(POST, s"/api/v1/sensors/$uuid/mesurements").withJsonBody(jsonRequestBody)
       val measurementResult = controller.collect(uuid)(fakeRequest)
@@ -34,7 +37,7 @@ class MeasurementControllerTest extends PlaySpec with GuiceOneAppPerTest with In
     }
     "return status code 500 data storage fails" in new Fixture {
       val jsonRequestBody = Json.parse( """{"co2":"2300","time":"2019-05-14T10:10"}""")
-      when(mockStorageService.saveMeasurement(uuid, jsonRequestBody.as[Option[Measurement]].get)).thenReturn(false)
+      when(mockStorageService.saveMeasurement(uuid, jsonRequestBody.as[Option[Measurement]].get)).thenReturn(Future.successful(false))
       val controller = new MeasurementController(stubControllerComponents(), mockStorageService)
       val fakeRequest = FakeRequest(POST, s"/api/v1/sensors/$uuid/mesurements").withJsonBody(jsonRequestBody)
       val measurementResult = controller.collect(uuid)(fakeRequest)

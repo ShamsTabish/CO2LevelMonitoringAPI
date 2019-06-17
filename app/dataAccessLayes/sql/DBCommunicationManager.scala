@@ -23,7 +23,7 @@ class DBCommunicationManager @Inject()(properties: Properties) {
         Class.forName(driver)
         connection = DriverManager.getConnection(url, username, password)
       } catch {
-        case exception => dbLogger.error("Failed to connect to DB.", exception)
+        case exception:Throwable => dbLogger.error("Failed to connect to DB.", exception)
       }
     }
   }

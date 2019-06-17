@@ -11,6 +11,9 @@ import play.api.test.Helpers.{GET, status, stubControllerComponents, _}
 import play.api.test.{FakeRequest, Helpers, Injecting}
 import services.MeasurementMatrixService
 
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+
 
 class MeasurementMatrixControllerTest extends PlaySpec with GuiceOneAppPerTest with Injecting with MockitoSugar {
 
@@ -21,7 +24,7 @@ class MeasurementMatrixControllerTest extends PlaySpec with GuiceOneAppPerTest w
       private val jsonMatrix: JsValue = Json.toJson(matrix)
       when(mockMeasurementMatrixService
         .calculateMatrix(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())
-      ).thenReturn(matrix)
+      ).thenReturn(Future.successful(matrix))
       val controller = new MeasurementMatrixController(stubControllerComponents(), mockMeasurementMatrixService)
       val fakeRequest = FakeRequest(GET, s"/api/v1/sensors/$uuid/mesurements")
       val matrixResult = controller.getMatrix(uuid)(fakeRequest)

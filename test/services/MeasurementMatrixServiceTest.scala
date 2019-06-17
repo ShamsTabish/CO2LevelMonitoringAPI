@@ -8,21 +8,24 @@ import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+
 class MeasurementMatrixServiceTest extends PlaySpec with MockitoSugar {
   "MeasurementMatrixService" should {
     "calculate correct Max and Average when there are some measurements" in new Fixture {
-      val listOfMeasurements = List(
+      val listOfMeasurements = Future.successful(List(
         Measurement(2200, oneDayAgo),
         Measurement(2000, threeDaysAgo),
         Measurement(500, oneDayAgo),
         Measurement(1000, twentyNineDaysAgo)
-      )
+      ))
       when(mockDBService.getMeasurements(uuid, oneMonthAgo, endTime)) thenReturn (listOfMeasurements)
       private val matrixService = new MeasurementMatrixService(mockDBService)
       matrixService.calculateMatrix(uuid, oneMonthAgo, endTime) mustEqual (MeasurementMatrix(2200, 1425.0f))
     }
     "calculate correct Max and Average when there are no records" in new Fixture {
-      val listOfMeasurements = List.empty[Measurement]
+      val listOfMeasurements = Future.successful(List.empty[Measurement])
       when(mockDBService.getMeasurements(uuid, oneMonthAgo, endTime)) thenReturn (listOfMeasurements)
       private val matrixService = new MeasurementMatrixService(mockDBService)
       matrixService.calculateMatrix(uuid, oneMonthAgo, endTime) mustEqual (MeasurementMatrix(0, 0))

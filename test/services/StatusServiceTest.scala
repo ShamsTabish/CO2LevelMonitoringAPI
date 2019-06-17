@@ -8,6 +8,9 @@ import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+
 class StatusServiceTest extends PlaySpec with MockitoSugar {
   "StatusService" should {
     "Set status to Ok if it is the first measurement and is not above 2000" in new Fixture {
@@ -56,7 +59,7 @@ class StatusServiceTest extends PlaySpec with MockitoSugar {
       val okMeasurement = Measurement(1500, someTime)
       val highMeasurement = Measurement(2300, someTime)
 
-      when(database.logAlert(uuid, highMeasurement)).thenReturn(true)
+      when(database.logAlert(uuid, highMeasurement)).thenReturn(Future.successful(true))
 
       private val service = new StatusService(database)
       service.updateStatus(uuid, okMeasurement)
@@ -71,7 +74,7 @@ class StatusServiceTest extends PlaySpec with MockitoSugar {
       val okMeasurement = Measurement(1500, someTime)
       val highMeasurement = Measurement(2300, someTime)
 
-      when(database.logAlert(uuid, highMeasurement)).thenReturn(true)
+      when(database.logAlert(uuid, highMeasurement)).thenReturn(Future.successful(true))
 
       private val service = new StatusService(database)
       service.updateStatus(uuid, okMeasurement)
@@ -80,7 +83,7 @@ class StatusServiceTest extends PlaySpec with MockitoSugar {
       service.updateStatus(uuid, highMeasurement)
       service.updateStatus(uuid, highMeasurement)
       service.updateStatus(uuid, okMeasurement)
-      service.updateStatus(uuid, okMeasurement) mustEqual (ALERT())
+      service.updateStatus(uuid, okMeasurement) mustEqual (Future.successful(ALERT()))
 
       verify(database, times(1)).logAlert(uuid, highMeasurement)
 
