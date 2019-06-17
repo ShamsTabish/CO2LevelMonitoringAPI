@@ -9,7 +9,8 @@ import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future}
 
 class StatusServiceTest extends PlaySpec with MockitoSugar {
   "StatusService" should {
@@ -17,7 +18,7 @@ class StatusServiceTest extends PlaySpec with MockitoSugar {
       val okMeasurement = Measurement(1500, someTime)
 
       private val service = new StatusService(database)
-      service.updateStatus(uuid, okMeasurement) mustEqual (OK())
+      Await.result(service.updateStatus(uuid, okMeasurement), Duration.Inf) mustEqual (OK())
 
     }
     "Set status to Ok if there were more than three measurements which were not above 2000" in new Fixture {
@@ -28,7 +29,7 @@ class StatusServiceTest extends PlaySpec with MockitoSugar {
       service.updateStatus(uuid, highMeasurement)
       service.updateStatus(uuid, okMeasurement)
       service.updateStatus(uuid, okMeasurement)
-      service.updateStatus(uuid, okMeasurement) mustEqual (OK())
+      Await.result(service.updateStatus(uuid, okMeasurement), Duration.Inf) mustEqual (OK())
 
     }
 
@@ -40,7 +41,7 @@ class StatusServiceTest extends PlaySpec with MockitoSugar {
       service.updateStatus(uuid, okMeasurement)
       service.updateStatus(uuid, okMeasurement)
       service.updateStatus(uuid, okMeasurement)
-      service.updateStatus(uuid, highMeasurement) mustEqual (WARN())
+      Await.result(service.updateStatus(uuid, highMeasurement), Duration.Inf) mustEqual (WARN())
 
     }
     "Set status to WARN if the measurement is below 2000 but previous measurements were above 2000" in new Fixture {
@@ -52,7 +53,7 @@ class StatusServiceTest extends PlaySpec with MockitoSugar {
       service.updateStatus(uuid, okMeasurement)
       service.updateStatus(uuid, okMeasurement)
       service.updateStatus(uuid, highMeasurement)
-      service.updateStatus(uuid, okMeasurement) mustEqual (WARN())
+      Await.result(service.updateStatus(uuid, okMeasurement), Duration.Inf) mustEqual (WARN())
 
     }
     "Set status to ALERT and log alert if there were consecutive three measurements above 2000" in new Fixture {
@@ -65,7 +66,7 @@ class StatusServiceTest extends PlaySpec with MockitoSugar {
       service.updateStatus(uuid, okMeasurement)
       service.updateStatus(uuid, highMeasurement)
       service.updateStatus(uuid, highMeasurement)
-      service.updateStatus(uuid, highMeasurement) mustEqual (ALERT())
+      Await.result(service.updateStatus(uuid, highMeasurement), Duration.Inf) mustEqual (ALERT())
 
       verify(database, times(1)).logAlert(uuid, highMeasurement)
 
@@ -83,7 +84,7 @@ class StatusServiceTest extends PlaySpec with MockitoSugar {
       service.updateStatus(uuid, highMeasurement)
       service.updateStatus(uuid, highMeasurement)
       service.updateStatus(uuid, okMeasurement)
-      service.updateStatus(uuid, okMeasurement) mustEqual (Future.successful(ALERT()))
+      Await.result(service.updateStatus(uuid, okMeasurement), Duration.Inf) mustEqual (ALERT())
 
       verify(database, times(1)).logAlert(uuid, highMeasurement)
 
