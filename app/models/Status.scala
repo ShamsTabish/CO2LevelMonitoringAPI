@@ -16,6 +16,15 @@ sealed trait Status {
   }
 }
 
+object Status {
+  def apply(status: String): Option[Status] = status match {
+    case "ALERT" => Some(ALERT())
+    case "WARN" => Some(WARN())
+    case "OK" => Some(OK())
+    case _ => None
+  }
+}
+
 case class OK() extends Status
 
 case class WARN() extends Status

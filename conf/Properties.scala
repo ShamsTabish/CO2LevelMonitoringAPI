@@ -13,6 +13,8 @@ class Properties @Inject()(configuration: Configuration) {
   lazy val dBUsername: String = requireProperty("DB_USER_NAME")
   lazy val dBPassword: String = requireProperty("DB_PASSWORD")
 
+  lazy val dbActorTimeout: Int = requireProperty("DB_Actor_Timeout_In_Seconds").toInt
+
   private def requireProperty(name: String): String = {
     sys.env.get(name).orElse(None) match {
       case Some(value) => value

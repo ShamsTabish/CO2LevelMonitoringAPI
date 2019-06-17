@@ -7,14 +7,16 @@ import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, AnyContent, ControllerComponents, Request}
 import services.MeasurementMatrixService
 
-class MeasurementMatrixController @Inject()(cc: ControllerComponents,
-                                            measurementMatrixService: MeasurementMatrixService) extends AbstractController(cc) {
+import scala.concurrent.ExecutionContext
 
-  def getMatrix(uuid: String) = Action { implicit request: Request[AnyContent] =>
+class MeasurementMatrixController @Inject()(cc: ControllerComponents, measurementMatrixService: MeasurementMatrixService)
+                                           (implicit val ec:ExecutionContext)extends AbstractController(cc) {
+
+  def getMatrix(uuid: String) = Action.async { implicit request: Request[AnyContent] =>
     val now = LocalDateTime.now()
     val oneMonthAgo = now.minusDays(30)
-    val matrix = measurementMatrixService.calculateMatrix(uuid, oneMonthAgo, now)
-    Ok(Json.toJson(matrix))
+    val matrixF = measurementMatrixService.calculateMatrix(uuid, oneMonthAgo, now)
+    matrixF.map(matrix => Ok(Json.toJson(matrix)))
   }
 
 }

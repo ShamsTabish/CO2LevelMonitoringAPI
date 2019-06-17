@@ -1,4 +1,4 @@
-package dataAccessLayes
+package dataAccessLayes.sql
 
 import java.sql.{Connection, DriverManager, ResultSet}
 
@@ -34,7 +34,7 @@ class DBCommunicationManager @Inject()(properties: Properties) {
   }
 
 
-  private[dataAccessLayes] def select[T](query: String, resultSetMapper: (ResultSet) => T): List[T] = {
+  private[sql] def select[T](query: String, resultSetMapper: (ResultSet) => T): List[T] = {
     synchronized {
       val probableData = Try {
         val statement = connection.createStatement
@@ -52,7 +52,7 @@ class DBCommunicationManager @Inject()(properties: Properties) {
     }
   }
 
-  private[dataAccessLayes] def insert[T](query: String): Option[Int] = {
+  private[sql] def insert[T](query: String): Option[Int] = {
     synchronized {
       val probableCount = Try {
         val statement = connection.createStatement
